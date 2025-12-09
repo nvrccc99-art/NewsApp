@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "718819321434",
+    "project_id": "povertyapp-f063d",
+    "storage_bucket": "povertyapp-f063d.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:718819321434:android:da545cf19fa3c85372da63",
+        "android_client_info": {
+          "package_name": "com.example.news_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "718819321434-9t8rm9mn4i4q4gdtjq9s0l2qtqus2jlv.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.news_app",
+            "certificate_hash": "302c601f91a924b6e2af2b0ce62911df974a167b"
+          }
+        },
+        {
+          "client_id": "718819321434-0nnir0h5mha35o7slcn0a6m4d7f4e55f.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCLtwWUJc-OI85XSl8G8mscjES4qFD94K0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "718819321434-0nnir0h5mha35o7slcn0a6m4d7f4e55f.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
