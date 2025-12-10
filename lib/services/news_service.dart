@@ -149,10 +149,14 @@ class NewsService {
       var url = '${ApiConfig.baseUrl}${ApiConfig.everythingEndpoint}?q=$query&language=en&apiKey=${ApiConfig.apiKey}&sortBy=$sortBy';
       
       if (from != null) {
-        url += '&from=${from.toIso8601String()}';
+        // Start of the from date (00:00:00)
+        final fromDate = DateTime(from.year, from.month, from.day);
+        url += '&from=${fromDate.toIso8601String()}';
       }
       if (to != null) {
-        url += '&to=${to.toIso8601String()}';
+        // End of the to date (23:59:59)
+        final toDate = DateTime(to.year, to.month, to.day, 23, 59, 59);
+        url += '&to=${toDate.toIso8601String()}';
       }
 
       final response = await http.get(Uri.parse(url));

@@ -67,7 +67,7 @@ class AuthService {
       );
     } catch (e) {
       print('Error registering: $e');
-      return null;
+      rethrow;
     }
   }
 

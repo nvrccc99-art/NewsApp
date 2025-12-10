@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../models/article.dart';
-import '../services/rating_service.dart';
 
 class ArticleCard extends StatefulWidget {
   final Article article;
@@ -19,19 +18,9 @@ class ArticleCard extends StatefulWidget {
 }
 
 class _ArticleCardState extends State<ArticleCard> {
-  bool _isLiked = false;
-
   @override
   void initState() {
     super.initState();
-    _loadLikeStatus();
-  }
-
-  Future<void> _loadLikeStatus() async {
-    final liked = await RatingService.getLike(widget.article.url ?? '');
-    if (mounted) {
-      setState(() => _isLiked = liked == true);
-    }
   }
 
   @override
@@ -105,31 +94,6 @@ class _ArticleCardState extends State<ArticleCard> {
                         ),
                       ),
                     ),
-                    // Like indicator badge
-                    if (_isLiked)
-                      Positioned(
-                        top: 8,
-                        right: 8,
-                        child: Container(
-                          padding: const EdgeInsets.all(6),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            shape: BoxShape.circle,
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withOpacity(0.2),
-                                blurRadius: 4,
-                                offset: const Offset(0, 2),
-                              ),
-                            ],
-                          ),
-                          child: const Icon(
-                            Icons.favorite,
-                            color: Colors.red,
-                            size: 16,
-                          ),
-                        ),
-                      ),
                   ],
                 ),
               ),

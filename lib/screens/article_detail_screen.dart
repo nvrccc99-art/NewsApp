@@ -6,7 +6,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import '../models/article.dart';
 import '../services/bookmark_service.dart';
 import '../services/stats_service.dart';
-import '../services/rating_service.dart';
 import '../services/offline_service.dart';
 import '../services/reading_history_service.dart';
 
@@ -67,22 +66,7 @@ class _ArticleDetailScreenState extends State<ArticleDetailScreen> {
     setState(() => _isBookmarked = !_isBookmarked);
   }
 
-  Future<void> _toggleLike(bool like) async {
-    await RatingService.setLike(widget.article.url, like);
-    final msg = like ? 'Liked this article' : 'Disliked this article';
-    if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
-    }
-    setState(() {});
-  }
 
-  Future<void> _setStars(int stars) async {
-    await RatingService.setRating(widget.article.url, stars);
-    if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Rating saved')));
-    }
-    setState(() {});
-  }
 
   Future<void> _launchURL() async {
     final Uri url = Uri.parse(widget.article.url);

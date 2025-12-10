@@ -1,14 +1,36 @@
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import '../models/article.dart';
+import 'auth_service.dart';
 
 class OfflineService {
-  static const String _offlineArticlesKey = 'offline_articles';
+  static const String _legacyKey = 'offline_articles';
   static const int _maxOfflineItems = 50;
+
+  static Future<String> _currentKey() async {
+    final user = AuthService.getCurrentUser();
+    final isGuest = await AuthService.isGuest();
+    if (user == null && !isGuest) {
+      return 'offline_articles_anonymous';
+    }
+    if (isGuest) return 'offline_articles_guest';
+    return 'offline_articles_${user!.uid}';
+  }
+
+  static Future<void> _maybeMigrate(SharedPreferences prefs, String key) async {
+    if (!prefs.containsKey(key) && prefs.containsKey(_legacyKey)) {
+      final legacy = prefs.getStringList(_legacyKey) ?? [];
+      if (legacy.isNotEmpty) {
+        await prefs.setStringList(key, legacy);
+      }
+    }
+  }
 
   static Future<List<Article>> getOfflineArticles() async {
     final prefs = await SharedPreferences.getInstance();
-    final articlesJson = prefs.getStringList(_offlineArticlesKey) ?? [];
+    final key = await _currentKey();
+    await _maybeMigrate(prefs, key);
+    final articlesJson = prefs.getStringList(key) ?? [];
     
     return articlesJson.map((json) {
       return Article.fromJson(jsonDecode(json));
@@ -17,7 +39,9 @@ class OfflineService {
 
   static Future<void> saveForOffline(Article article) async {
     final prefs = await SharedPreferences.getInstance();
-    final articlesJson = prefs.getStringList(_offlineArticlesKey) ?? [];
+    final key = await _currentKey();
+    await _maybeMigrate(prefs, key);
+    final articlesJson = prefs.getStringList(key) ?? [];
     
     // Check if already saved
     final alreadySaved = articlesJson.any((json) {
@@ -33,20 +57,22 @@ class OfflineService {
         articlesJson.removeRange(_maxOfflineItems, articlesJson.length);
       }
       
-      await prefs.setStringList(_offlineArticlesKey, articlesJson);
+      await prefs.setStringList(key, articlesJson);
     }
   }
 
   static Future<void> removeOfflineArticle(Article article) async {
     final prefs = await SharedPreferences.getInstance();
-    final articlesJson = prefs.getStringList(_offlineArticlesKey) ?? [];
+    final key = await _currentKey();
+    await _maybeMigrate(prefs, key);
+    final articlesJson = prefs.getStringList(key) ?? [];
     
     articlesJson.removeWhere((json) {
       final savedArticle = Article.fromJson(jsonDecode(json));
       return savedArticle.url == article.url;
     });
     
-    await prefs.setStringList(_offlineArticlesKey, articlesJson);
+    await prefs.setStringList(key, articlesJson);
   }
 
   static Future<bool> isSavedOffline(Article article) async {
@@ -56,6 +82,7 @@ class OfflineService {
 
   static Future<void> clearOfflineArticles() async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.remove(_offlineArticlesKey);
+    final key = await _currentKey();
+    await prefs.remove(key);
   }
 }

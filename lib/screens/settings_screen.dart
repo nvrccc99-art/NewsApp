@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../services/auth_service.dart';
 import '../services/preferences_service.dart';
 import '../providers/theme_provider.dart';
@@ -78,6 +79,47 @@ class _SettingsScreenState extends State<SettingsScreen> {
       );
     }
   }
+
+  void _showEditNameDialog() {
+    final controller = TextEditingController(text: _userName);
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Edit Name'),
+        content: TextField(
+          controller: controller,
+          decoration: const InputDecoration(
+            hintText: 'Enter your name',
+            border: OutlineInputBorder(),
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () async {
+              final newName = controller.text.trim();
+              if (newName.isNotEmpty) {
+                final prefs = await SharedPreferences.getInstance();
+                await prefs.setString('user_name', newName);
+                setState(() => _userName = newName);
+                if (!mounted) return;
+                Navigator.pop(context);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Name updated')),
+                );
+              }
+            },
+            child: const Text('Save'),
+          ),
+        ],
+      ),
+    );
+  }
+
+
 
   // ...existing code...
 
@@ -172,11 +214,21 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        _userName,
-                        style: const TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
+                      GestureDetector(
+                        onTap: _showEditNameDialog,
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                _userName,
+                                style: const TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                            const Icon(Icons.edit, size: 18),
+                          ],
                         ),
                       ),
                       if (_userEmail != null)

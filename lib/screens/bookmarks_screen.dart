@@ -105,65 +105,17 @@ class _BookmarksScreenState extends State<BookmarksScreen> {
         itemCount: _bookmarks.length,
         itemBuilder: (context, index) {
           final article = _bookmarks[index];
-          return Dismissible(
-            key: Key(article.url ?? article.title),
-            direction: DismissDirection.endToStart,
-            background: Container(
-              alignment: Alignment.centerRight,
-              padding: const EdgeInsets.only(right: 20),
-              color: Colors.red,
-              child: const Icon(
-                Icons.delete,
-                color: Colors.white,
-                size: 32,
-              ),
-            ),
-            confirmDismiss: (direction) async {
-              return await showDialog<bool>(
-                context: context,
-                builder: (context) => AlertDialog(
-                  title: const Text('Remove Bookmark'),
-                  content: const Text('Remove this article from bookmarks?'),
-                  actions: [
-                    TextButton(
-                      onPressed: () => Navigator.pop(context, false),
-                      child: const Text('Cancel'),
-                    ),
-                    TextButton(
-                      onPressed: () => Navigator.pop(context, true),
-                      style: TextButton.styleFrom(foregroundColor: Colors.red),
-                      child: const Text('Remove'),
-                    ),
-                  ],
+          return ArticleCard(
+            article: article,
+            onTap: () async {
+              await Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ArticleDetailScreen(article: article),
                 ),
               );
+              _loadBookmarks(); // Refresh in case bookmark status changed
             },
-            onDismissed: (direction) async {
-              await BookmarkService.removeBookmark(article);
-              setState(() {
-                _bookmarks.removeAt(index);
-              });
-              if (mounted) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('Bookmark removed'),
-                    duration: Duration(seconds: 2),
-                  ),
-                );
-              }
-            },
-            child: ArticleCard(
-              article: article,
-              onTap: () async {
-                await Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => ArticleDetailScreen(article: article),
-                  ),
-                );
-                _loadBookmarks(); // Refresh in case bookmark status changed
-              },
-            ),
           );
         },
       ),
