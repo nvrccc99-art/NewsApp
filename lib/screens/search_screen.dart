@@ -77,7 +77,7 @@ class _SearchScreenState extends State<SearchScreen> {
         });
       } else {
         setState(() {
-          _errorMessage = errStr;
+          _errorMessage = errStr.replaceAll('Exception: ', '');
           _isLoading = false;
         });
       }

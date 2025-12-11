@@ -52,7 +52,7 @@ class _SourcesScreenState extends State<SourcesScreen> {
       });
     } catch (e) {
       setState(() {
-        _errorMessage = e.toString();
+        _errorMessage = e.toString().replaceAll('Exception: ', '');
         _isLoading = false;
       });
     }

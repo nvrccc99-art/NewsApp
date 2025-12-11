@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:http/http.dart' as http;
 import '../config/api_config.dart';
 import '../models/article.dart';
@@ -26,8 +27,13 @@ class NewsService {
       } else {
         throw Exception('Failed to load news: ${response.statusCode}');
       }
+    } on SocketException {
+      throw Exception('No internet connection. Please check your network.');
     } catch (e) {
-      throw Exception('Error fetching news: $e');
+      if (e.toString().contains('SocketException')) {
+        throw Exception('No internet connection. Please check your network.');
+      }
+      throw Exception('Failed to load news. Please try again.');
     }
   }
 
@@ -51,8 +57,13 @@ class NewsService {
       } else {
         throw Exception('Failed to search news: ${response.statusCode}');
       }
+    } on SocketException {
+      throw Exception('No internet connection. Please check your network.');
     } catch (e) {
-      throw Exception('Error searching news: $e');
+      if (e.toString().contains('SocketException')) {
+        throw Exception('No internet connection. Please check your network.');
+      }
+      throw Exception('Failed to search news. Please try again.');
     }
   }
 
@@ -76,8 +87,13 @@ class NewsService {
       } else {
         throw Exception('Failed to load category news: ${response.statusCode}');
       }
+    } on SocketException {
+      throw Exception('No internet connection. Please check your network.');
     } catch (e) {
-      throw Exception('Error fetching category news: $e');
+      if (e.toString().contains('SocketException')) {
+        throw Exception('No internet connection. Please check your network.');
+      }
+      throw Exception('Failed to load news. Please try again.');
     }
   }
 
@@ -99,8 +115,13 @@ class NewsService {
       } else {
         throw Exception('Failed to load sources: ${response.statusCode}');
       }
+    } on SocketException {
+      throw Exception('No internet connection. Please check your network.');
     } catch (e) {
-      throw Exception('Error fetching sources: $e');
+      if (e.toString().contains('SocketException')) {
+        throw Exception('No internet connection. Please check your network.');
+      }
+      throw Exception('Failed to load sources. Please try again.');
     }
   }
 
@@ -128,8 +149,13 @@ class NewsService {
       } else {
         throw Exception('Failed to load news from sources: ${response.statusCode}');
       }
+    } on SocketException {
+      throw Exception('No internet connection. Please check your network.');
     } catch (e) {
-      throw Exception('Error fetching news from sources: $e');
+      if (e.toString().contains('SocketException')) {
+        throw Exception('No internet connection. Please check your network.');
+      }
+      throw Exception('Failed to load news. Please try again.');
     }
   }
 
@@ -173,8 +199,13 @@ class NewsService {
       } else {
         throw Exception('Failed to search with date range: ${response.statusCode}');
       }
+    } on SocketException {
+      throw Exception('No internet connection. Please check your network.');
     } catch (e) {
-      throw Exception('Error searching with date range: $e');
+      if (e.toString().contains('SocketException')) {
+        throw Exception('No internet connection. Please check your network.');
+      }
+      throw Exception('Failed to search. Please try again.');
     }
   }
 }

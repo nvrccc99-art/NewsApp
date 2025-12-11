@@ -80,47 +80,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
     }
   }
 
-  void _showEditNameDialog() {
-    final controller = TextEditingController(text: _userName);
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Edit Name'),
-        content: TextField(
-          controller: controller,
-          decoration: const InputDecoration(
-            hintText: 'Enter your name',
-            border: OutlineInputBorder(),
-          ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
-          ),
-          TextButton(
-            onPressed: () async {
-              final newName = controller.text.trim();
-              if (newName.isNotEmpty) {
-                final prefs = await SharedPreferences.getInstance();
-                await prefs.setString('user_name', newName);
-                setState(() => _userName = newName);
-                if (!mounted) return;
-                Navigator.pop(context);
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Name updated')),
-                );
-              }
-            },
-            child: const Text('Save'),
-          ),
-        ],
-      ),
-    );
-  }
-
-
-
   // ...existing code...
 
   void _showTextSizePicker() {
@@ -214,21 +173,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      GestureDetector(
-                        onTap: _showEditNameDialog,
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: Text(
-                                _userName,
-                                style: const TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                            const Icon(Icons.edit, size: 18),
-                          ],
+                      Text(
+                        _userName,
+                        style: const TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
                       if (_userEmail != null)

@@ -101,7 +101,7 @@ class _HomeScreenState extends State<HomeScreen> {
       });
     } catch (e) {
       setState(() {
-        _errorMessage = e.toString();
+        _errorMessage = e.toString().replaceAll('Exception: ', '');
         _isLoading = false;
       });
     }
